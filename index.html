@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Registro de Atendimentos</title>
+  <meta name="color-scheme" content="light dark"/>
+  <style>
+    :root{
+      --bg:#f7f8fa; --card:#fff; --text:#222; --muted:#666;
+      --primary:#2563eb; --primary-600:#1e4fd3; --border:#e5e7eb;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b0d10; --card:#111418; --text:#e8eaed; --muted:#a1a1aa; --border:#2a2f36; }
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .container{max-width:760px;margin:32px auto;padding:24px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+    h1{margin:0 0 10px;font-size:1.5rem}
+    p.desc{margin:0 0 16px;color:var(--muted)}
+    form{display:grid;gap:14px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{font-weight:600;font-size:.95rem}
+    input,select,textarea{
+      width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:transparent;color:inherit;font-size:14px
+    }
+    input::placeholder{color:#9aa0a6}
+    textarea{min-height:110px;resize:vertical}
+    .helper{font-size:.8rem;color:var(--muted);margin-top:4px}
+    .actions{display:flex;gap:10px;align-items:center;margin-top:6px}
+    button{
+      background:var(--primary);color:#fff;border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer
+    }
+    button:hover{background:var(--primary-600)}
+    .note{font-size:.8rem;color:var(--muted)}
+    /* "Lista suspensa com pesquisa" do Atendente */
+    .combo{position:relative}
+    .combo input{padding-right:36px}
+    .combo .clear{
+      position:absolute;right:8px;top:50%;transform:translateY(-50%);
+      border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:18px;line-height:1
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registro de Atendimentos</h1>
+    <p class="desc">Preencha os campos abaixo. Os envios serão armazenados no painel <strong>Forms</strong> do Netlify.</p>
+
+    <!-- IMPORTANTE para Netlify Forms -->
+    <form name="atendimentos" method="POST" action="/success.html" data-netlify="true" netlify-honeypot="bot-field">
+      <!-- Campo oculto obrigatório para Netlify identificar o formulário -->
+      <input type="hidden" name="form-name" value="atendimentos" />
+      <!-- Honeypot (anti-spam) invisível -->
+      <p style="display:none;">
+        <label>Não preencha este campo: <input name="bot-field" /></label>
+      </p>
+
+      <!-- DATA + HORA -->
+      <div class="row">
+        <div>
+          <label for="data">Data de solicitação *</label>
+          <!-- Se quiser forçar 00/00/0000, posso trocar para texto + máscara JS.
+               Aqui uso "date" para validação nativa. -->
+          <input id="data" name="data" type="date" required />
+          <div class="helper">Formato: dia/mês/ano</div>
+        </div>
+        <div>
+          <label for="hora">Hora *</label>
+          <input id="hora" name="hora" type="time" required />
+          <div class="helper">Formato: 00:00</div>
+        </div>
+      </div>
+
+      <!-- ÓRGÃO + SOLICITANTE -->
+      <div class="row">
+        <div>
+          <label for="orgao">Órgão *</label>
+          <input id="orgao" name="orgao" type="text" placeholder="Nome do órgão" required />
+        </div>
+        <div>
+          <label for="solicitante">Solicitante *</label>
+          <input id="solicitante" name="solicitante" type="text" placeholder="Nome do solicitante" required />
+        </div>
+      </div>
+
+      <!-- ASSUNTO -->
+      <div>
+        <label for="assunto">Assunto *</label>
+        <input id="assunto" name="assunto" type="text" placeholder="Resumo do assunto" required />
+      </div>
+
+      <!-- CANAL -->
+      <div class="row">
+        <div>
+          <label for="canal">Canal *</label>
+          <select id="canal" name="canal" required>
+            <option value="">Selecione…</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="E-mail">E-mail</option>
+          </select>
+        </div>
+
+        <!-- ATENDENTE (lista suspensa com pesquisa) -->
+        <div class="combo">
+          <label for="atendente">Atendente *</label>
+          <!-- <input list="…"> cria lista com pesquisa nativa -->
+          <input id="atendente" name="atendente" list="lista-atendentes" placeholder="Digite para pesquisar…" required />
+          <button class="clear" type="button" aria-label="Limpar" title="Limpar" onclick="document.getElementById('atendente').value=''">×</button>
+
+          <!-- Edite os nomes abaixo conforme sua equipe -->
+          <datalist id="lista-atendentes">
+            <option value="João Victor Bastos Sena"></option>
+            <option value="Ana Paula Souza"></option>
+            <option value="Carlos Henrique"></option>
+            <option value="Mariana Oliveira"></option>
+            <option value="Rafael Gomes"></option>
+          </datalist>
+          <div class="helper">Digite para ver sugestões ou informe um novo nome.</div>
+        </div>
+      </div>
+
+      <!-- OBSERVAÇÃO -->
+      <div>
+        <label for="observacao">Observação</label>
+        <textarea id="observacao" name="observacao" placeholder="Detalhes do atendimento, ações tomadas, prazos, etc."></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Enviar registro</button>
+        <span class="note">Após enviar, você será redirecionado para a confirmação.</span>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+``
