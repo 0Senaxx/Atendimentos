@@ -33,7 +33,6 @@
     }
     button:hover{background:var(--primary-600)}
     .note{font-size:.8rem;color:var(--muted)}
-    /* "Lista suspensa com pesquisa" do Atendente */
     .combo{position:relative}
     .combo input{padding-right:36px}
     .combo .clear{
@@ -47,12 +46,18 @@
     <h1>Registro de Atendimentos</h1>
     <p class="desc">Preencha os campos abaixo. Os envios serão armazenados no painel <strong>Forms</strong> do Netlify.</p>
 
-    <!-- IMPORTANTE para Netlify Forms -->
-    <form name="atendimentos" method="POST" action="/success.html" data-netlify="true" netlify-honeypot="bot-field">
-      <!-- Campo oculto obrigatório para Netlify identificar o formulário -->
+    <!-- FORM CORRETA PARA NETLIFY FORMS -->
+    <form name="atendimentos"
+          method="POST"
+          action="/success.html"
+          data-netlify="true"
+          netlify-honeypot="bot-field">
+
+      <!-- Campo oculto obrigatório -->
       <input type="hidden" name="form-name" value="atendimentos" />
-      <!-- Honeypot (anti-spam) invisível -->
-      <p style="display:none;">
+
+      <!-- Honeypot anti-spam (invisível) -->
+      <p style="display:none">
         <label>Não preencha este campo: <input name="bot-field" /></label>
       </p>
 
@@ -60,8 +65,6 @@
       <div class="row">
         <div>
           <label for="data">Data de solicitação *</label>
-          <!-- Se quiser forçar 00/00/0000, posso trocar para texto + máscara JS.
-               Aqui uso "date" para validação nativa. -->
           <input id="data" name="data" type="date" required />
           <div class="helper">Formato: dia/mês/ano</div>
         </div>
@@ -90,7 +93,7 @@
         <input id="assunto" name="assunto" type="text" placeholder="Resumo do assunto" required />
       </div>
 
-      <!-- CANAL -->
+      <!-- CANAL + ATENDENTE -->
       <div class="row">
         <div>
           <label for="canal">Canal *</label>
@@ -101,14 +104,11 @@
           </select>
         </div>
 
-        <!-- ATENDENTE (lista suspensa com pesquisa) -->
         <div class="combo">
           <label for="atendente">Atendente *</label>
-          <!-- <input list="…"> cria lista com pesquisa nativa -->
           <input id="atendente" name="atendente" list="lista-atendentes" placeholder="Digite para pesquisar…" required />
           <button class="clear" type="button" aria-label="Limpar" title="Limpar" onclick="document.getElementById('atendente').value=''">×</button>
 
-          <!-- Edite os nomes abaixo conforme sua equipe -->
           <datalist id="lista-atendentes">
             <option value="João Victor Bastos Sena"></option>
             <option value="Ana Paula Souza"></option>
@@ -134,4 +134,3 @@
   </div>
 </body>
 </html>
-``
